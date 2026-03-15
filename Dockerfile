@@ -3,7 +3,7 @@
 FROM ghcr.io/linuxserver/unrar:latest AS unrar
 
 FROM node:22-alpine AS frontend-builder
-RUN mkdir -p /build
+RUN apk add --no-cache git
 RUN git clone --depth 1 --branch provider-subsarr \
     "https://github.com/slimcdk/bazarr.git" /build
 WORKDIR /build/frontend
