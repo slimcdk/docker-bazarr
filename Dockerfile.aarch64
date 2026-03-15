@@ -33,21 +33,10 @@ RUN \
   echo "**** install bazarr ****" && \
   mkdir -p \
     /app/bazarr/bin && \
-  if [ -z ${BAZARR_VERSION+x} ]; then \
-    BAZARR_VERSION=$(curl -sX GET "https://api.github.com/repos/morpheus65535/bazarr/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
-  curl -o \
-    /tmp/bazarr.zip -L \
-    "https://github.com/morpheus65535/bazarr/releases/download/${BAZARR_VERSION}/bazarr.zip" && \
-  unzip \
-    /tmp/bazarr.zip -d \
+  git clone --depth 1 --branch provider-subsarr \
+    "https://github.com/slimcdk/bazarr.git" \
     /app/bazarr/bin && \
-  rm -Rf /app/bazarr/bin/bin && \
-  echo "UpdateMethod=docker\nBranch=master\nPackageVersion=${VERSION}\nPackageAuthor=linuxserver.io" > /app/bazarr/package_info && \
-  curl -o \
-    /app/bazarr/bin/postgres-requirements.txt -L \
-    "https://raw.githubusercontent.com/morpheus65535/bazarr/${BAZARR_VERSION}/postgres-requirements.txt" && \
+  echo "UpdateMethod=docker\nBranch=provider-subsarr\nPackageVersion=${VERSION}\nPackageAuthor=linuxserver.io" > /app/bazarr/package_info && \
   echo "**** Install requirements ****" && \
   python3 -m venv /lsiopy && \
   pip install -U --no-cache-dir \
