@@ -2,6 +2,13 @@
 
 FROM ghcr.io/linuxserver/unrar:latest AS unrar
 
+FROM node:22-alpine AS frontend-builder
+RUN mkdir -p /build
+RUN git clone --depth 1 --branch provider-subsarr \
+    "https://github.com/slimcdk/bazarr.git" /build
+WORKDIR /build/frontend
+RUN npm ci && npm run build
+
 FROM ghcr.io/linuxserver/baseimage-alpine:3.23
 
 # set version label
@@ -54,6 +61,9 @@ RUN \
     $HOME/.cache \
     $HOME/.cargo \
     /tmp/*
+
+# add built frontend
+COPY --from=frontend-builder /build/frontend/build /app/bazarr/bin/frontend/build
 
 # add local files
 COPY root/ /
