@@ -26,6 +26,7 @@ RUN \
   echo "**** install packages ****" && \
   apk add --no-cache \
     ffmpeg \
+    git \
     libxml2 \
     libxslt \
     mediainfo \
